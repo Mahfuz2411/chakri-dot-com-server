@@ -32,6 +32,7 @@ async function run() {
       res.send('Sweet Home');
     });
 
+    // get methods for jobs
     app.get('/jobs', async(req, res) => {
       const query = jobsCollection.find();
       const result = await query.toArray();
@@ -52,6 +53,13 @@ async function run() {
       res.send(result || "[]");
     });
 
+    // get methods for bids
+    app.get('/mybids/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {useremail: email}
+      const result = await bidsCollection.find(query).toArray();
+      res.send(result || "[]");
+    });
 
 
     // Post methods
