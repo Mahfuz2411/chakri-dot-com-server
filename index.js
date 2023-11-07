@@ -46,7 +46,7 @@ async function run() {
       res.send(result || "{}");
     });
 
-    app.get('/myjob/:email', async(req, res) => {
+    app.get('/myjobs/:email', async(req, res) => {
       const email = req.params.email;
       const query = {email: email}
       const result = await jobsCollection.find(query).toArray();
@@ -57,6 +57,14 @@ async function run() {
     app.get('/mybids/:email', async(req, res) => {
       const email = req.params.email;
       const query = {useremail: email}
+      const result = await bidsCollection.find(query).toArray();
+      res.send(result || "[]");
+    });
+
+    // get method for bid requests
+    app.get('/requests/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {buyeremail: email}
       const result = await bidsCollection.find(query).toArray();
       res.send(result || "[]");
     });
@@ -75,6 +83,14 @@ async function run() {
       res.send(result);
     });
 
+
+    // delete methods
+    app.delete('/jobs/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await jobsCollection.deleteOne(query);
+      res.send(result);
+    });
     
     app.listen(port, () => {
       console.log(`http://localhost:${port}`)
