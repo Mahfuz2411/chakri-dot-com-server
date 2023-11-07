@@ -61,7 +61,11 @@ async function run() {
       res.send(result);
     });
 
-
+    app.post('/bids', async(req, res) => {
+      const bid = req.body;
+      const result = await bidsCollection.insertOne(bid);
+      res.send(result);
+    });
 
     
     app.listen(port, () => {
