@@ -33,6 +33,8 @@ async function run() {
       res.send('Sweet Home');
     });
 
+
+    // All methods for jobs
     // get methods for jobs
     app.get('/jobs', async(req, res) => {
       const query = jobsCollection.find();
@@ -54,6 +56,39 @@ async function run() {
       res.send(result || "[]");
     });
 
+    // Post methods
+    app.post('/jobs', async(req, res) => {
+      const job = req.body;
+      const result = await jobsCollection.insertOne(job);
+      res.send(result);
+    });
+
+    // delete methods
+    app.delete('/jobs/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await jobsCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // put method 
+    app.put('/jobs/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const options = {upsert: true}
+      const updateJob = req.body;
+
+      const setJob = {
+        $set: {
+          ...updateJob,
+        }
+      }
+      const result = await jobsCollection.updateOne(query,setJob, options);
+      res.send(result);
+    });
+
+    
+    // All methods for bids
     // get methods for bids
     app.get('/mybids/:email', async(req, res) => {
       const email = req.params.email;
@@ -70,43 +105,10 @@ async function run() {
       res.send(result || "[]");
     });
 
-
-    // Post methods
-    app.post('/jobs', async(req, res) => {
-      const job = req.body;
-      const result = await jobsCollection.insertOne(job);
-      res.send(result);
-    });
-
+    // post method for bid requests
     app.post('/bids', async(req, res) => {
       const bid = req.body;
       const result = await bidsCollection.insertOne(bid);
-      res.send(result);
-    });
-
-
-    // delete methods
-    app.delete('/jobs/:id', async(req, res) => {
-      const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const result = await jobsCollection.deleteOne(query);
-      res.send(result);
-    });
-
-
-    // put method 
-    app.put('/jobs/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const options = {upsert: true}
-      const updateJob = req.body;
-
-      const setJob = {
-        $set: {
-          ...updateJob,
-        }
-      }
-      const result = await jobsCollection.updateOne(query,setJob, options);
       res.send(result);
     });
 
@@ -131,7 +133,7 @@ async function run() {
     });
 
 
-
+    // all methods for comments
     // methods for comments
     app.get('/comment', async(req, res) => {
       const query = commentsCollection.find();
