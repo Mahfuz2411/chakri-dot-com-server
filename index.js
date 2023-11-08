@@ -107,7 +107,23 @@ async function run() {
       }
       const result = await jobsCollection.updateOne(query,setJob, options);
       res.send(result);
-    })
+    });
+
+    // put method form bid by _id
+    app.put('/bids/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const options = {upsert: true}
+      const updateBid = req.body;
+
+      const setBid = {
+        $set: {
+          ...updateBid,
+        }
+      }
+      const result = await bidsCollection.updateOne(query, setBid, options);
+      res.send(result);
+    });
     
     app.listen(port, () => {
       console.log(`http://localhost:${port}`)
