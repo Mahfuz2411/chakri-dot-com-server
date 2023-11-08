@@ -27,6 +27,7 @@ async function run() {
     await client.connect();
     const jobsCollection = client.db('chakriDB').collection('jobs');
     const bidsCollection = client.db("chakriDB").collection('bids');
+    const commentsCollection = client.db("chakriDB").collection('comments');
 
     app.get('/', (req, res) => {
       res.send('Sweet Home');
@@ -127,6 +128,21 @@ async function run() {
     
     app.listen(port, () => {
       console.log(`http://localhost:${port}`)
+    });
+
+
+
+    // methods for comments
+    app.get('/comment', async(req, res) => {
+      const query = commentsCollection.find();
+      const result = await query.toArray();
+      res.send(result);
+    });
+
+    app.post('/comment', async(req, res) => {
+      const comment = req.body;
+      const result = await commentsCollection.insertOne(comment);
+      res.send(result);
     });
 
 
